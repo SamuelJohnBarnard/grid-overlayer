@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Grid Overlayer</title>
+
+    <link rel="stylesheet" href="styles/header.css" />
+    <link rel="stylesheet" href="styles/description.css" />
+    <link rel="stylesheet" href="styles/general.css" />
+    <link rel="stylesheet" href="styles/selectors.css" />
+    <link rel="stylesheet" href="styles/table.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      class="jsbin"
+      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <script
+      class="jsbin"
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"
+    ></script>
+    <script
+      class="jsbin"
+      src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"
+    ></script>
+    <meta charset="utf-8" />
+  </head>
+
+  <body>
+    <div class="header">
+      <div class="page-title">Grid Overlayer</div>
+    </div>
+    <div class="page-content">
+      <div class="page-description">
+        The purpose of this tool is to overlay a grid on an image. You can
+        change various styles of the grid, and then add letters and numbers to
+        the grid. When you're done, click 'Generate Grid Overlay'!
+      </div>
+      <div class="component-grid">
+        <div class="selector-container">
+          <div class="selectors">
+            <div class="selector">
+              <!--Select file-->
+
+              <input
+                type="file"
+                class="sub-selector"
+                style="width: 180px"
+                accept="image/gif, image/jpeg, image/png"
+                onchange="readURL(this);"
+              />
+              <div class="sub-selector">
+                <div>Select an Image</div>
+              </div>
+            </div>
+            <div class="selector">
+              <!--Select Spacing-->
+
+              <input
+                type="number"
+                min="15"
+                max="300"
+                value="20"
+                class="sub-selector"
+                id="grid-line-spacing"
+                onchange="GridGenerator()"
+              />
+              <div class="sub-selector">Select Grid Line Spacing</div>
+            </div>
+            <div class="selector">
+              <!--Select Line Width-->
+
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value="1"
+                class="sub-selector"
+                id="grid-line-width"
+                onchange="GridGenerator()"
+              />
+              <div class="sub-selector">Select Grid Line Width</div>
+            </div>
+            <div class="selector">
+              <!--Select Line Colour-->
+
+              <input
+                type="color"
+                class="sub-selector"
+                id="grid-line-colour"
+                onchange="GridGenerator()"
+              />
+              <div class="sub-selector">Select Grid Line Colour</div>
+            </div>
+            <div class="selector">
+              <!--Add letters and numbers to grid?-->
+
+              <input
+                type="checkbox"
+                id="checkbox-letters"
+                class="sub-selector"
+                onclick="AddLettersAndNumbers()"
+                onchange="GridGenerator()"
+              />
+              <label for="checkbox-letters" class="sub-selector">
+                Please tick here if you wish to add letters and numbers to the
+                rows and columns of your grid
+              </label>
+            </div>
+            <div class="selector hideable">
+              <!--Select Lowercase or Capital Letters-->
+
+              <input
+                type="radio"
+                name="case"
+                value="lower-case"
+                id="lower-case-radio"
+                class="sub-selector"
+                onchange="GridGenerator()"
+              />
+              <label for="lower-case-radio" class="sub-selector"
+                >Lower Case Letters</label
+              ><br />
+              <input
+                type="radio"
+                name="case"
+                value="upper-case"
+                id="upper-case-radio"
+                class="sub-selector"
+                onchange="GridGenerator()"
+              />
+              <label for="upper-case-radio" class="sub-selector"
+                >Upper Case Letters</label
+              ><br />
+            </div>
+            <div class="selector hideable">
+              <!--Select Font Size-->
+
+              <input
+                type="number"
+                min="11"
+                max="72"
+                value="12"
+                class="sub-selector"
+                id="select-font-size"
+                onchange="GridGenerator()"
+              />
+              <div class="sub-selector">Select Font Size</div>
+            </div>
+            <div class="selector hideable">
+              <!--Select Font Colour-->
+
+              <input
+                type="color"
+                class="sub-selector"
+                id="select-font-colour"
+                onchange="GridGenerator()"
+              />
+              <div class="sub-selector">Select Font Colour</div>
+            </div>
+          </div>
+        </div>
+        <div class="image-container" id="my-image-container">
+          <div class="grid" id="my-grid"></div>
+          <img
+            class="overlayable-image"
+            src="#"
+            id="your-image"
+            alt="Your Image will be displayed here"
+          />
+        </div>
+      </div>
+
+      <div class="create-grid-button">
+        <button class="generation-button" onclick="GenerateFinalImage()">
+          How to get the Grid Overlay
+        </button>
+      </div>
+    </div>
+    <div id="output"></div>
+    <div class="footer">
+      If you have any feedback or questions, please email
+      samueljohnbarnard@gmail.com
+    </div>
+    <!--SCRIPT BELOW-->
+    <script>
+      function AddLettersAndNumbers() {
+        //Makes letters and numbers appear and disappear
+        const lettersAndNumbersActive =
+          document.getElementById("checkbox-letters");
+        if (lettersAndNumbersActive.checked == true) {
+          const lettersAndNumbers = document.getElementsByClassName("hideable");
+          lettersAndNumbers[0].style.visibility = "visible";
+          lettersAndNumbers[1].style.visibility = "visible";
+          lettersAndNumbers[2].style.visibility = "visible";
+        } else {
+          const lettersAndNumbers = document.getElementsByClassName("hideable");
+          lettersAndNumbers[0].style.visibility = "hidden";
+          lettersAndNumbers[1].style.visibility = "hidden";
+          lettersAndNumbers[2].style.visibility = "hidden";
+        }
+      }
+
+      function readURL(input) {
+        //lets uploaded images appear on the webpage.
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            $("#your-image").attr("src", e.target.result);
+          };
+
+          document.getElementById("my-grid").style.visibility = "visible";
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      //The code below gets the width and height of the image
+
+      const img = document.getElementById("your-image");
+      img.onload = function () {
+        let yourImageHeight =
+          document.getElementById("your-image").offsetHeight;
+        let yourImageWidth = document.getElementById("your-image").offsetWidth;
+
+        let yourImageHeightString = yourImageHeight.toString() + "px";
+        let yourImageWidthString = yourImageWidth.toString() + "px";
+
+        document.getElementById("my-grid").style.height = yourImageHeightString;
+        document.getElementById("my-grid").style.width = yourImageWidthString;
+
+        //https://www.w3schools.com/howto/howto_css_image_text.asp use this to place the text
+      };
+
+      //the below code changes the grid as updates are entered by the user
+
+      function GridGenerator() {
+        let gridLineSpacingValue =
+          document.getElementById("grid-line-spacing").value;
+        let gridLineWidthValue =
+          document.getElementById("grid-line-width").value;
+        let gridLineColourValue =
+          document.getElementById("grid-line-colour").value;
+        let gridLineSpacingValueString = gridLineSpacingValue.toString() + "px";
+        let gridLineSpacingValueNumber =
+          Number(gridLineSpacingValue) + Number(gridLineWidthValue);
+        let gridLineSpacingValuePlusGridLineWidthString =
+          gridLineSpacingValueNumber.toString() + "px";
+        //final calculation for the function below
+        document.getElementById("my-grid").style.backgroundImage =
+          "repeating-linear-gradient(180deg, transparent, transparent " +
+          gridLineSpacingValueString +
+          ", " +
+          gridLineColourValue +
+          " " +
+          gridLineSpacingValueString +
+          ", " +
+          gridLineColourValue +
+          " " +
+          gridLineSpacingValuePlusGridLineWidthString +
+          "), repeating-linear-gradient( 90deg, transparent, transparent " +
+          gridLineSpacingValueString +
+          ", " +
+          gridLineColourValue +
+          " " +
+          gridLineSpacingValueString +
+          ", " +
+          gridLineColourValue +
+          " " +
+          gridLineSpacingValuePlusGridLineWidthString +
+          ")";
+
+        //below: this removes all the text every time GridGenerator is called.
+
+        const removeableElements =
+          document.getElementsByClassName("removeable");
+        for (i = 0; i < removeableElements.length; i += 0) {
+          removeableElements[i].remove();
+        }
+
+        //Now the part of the function that adds letters and numbers to the grid
+
+        const lettersAndNumbersActive =
+          document.getElementById("checkbox-letters");
+
+        if (lettersAndNumbersActive.checked == true) {
+          let theImageHeight =
+            document.getElementById("your-image").offsetHeight;
+          let theImageWidth = document.getElementById("your-image").offsetWidth;
+
+          // let theImageHeightString = theImageHeight.toString() + "px";
+          // let theImageWidthString = theImageWidth.toString() + "px";
+          //ABOVE: to be used later
+
+          let lowerCaseRadioChecked =
+            document.getElementById("lower-case-radio").checked;
+          let fontSize = document.getElementById("select-font-size").value;
+          let fontSizeString = fontSize.toString() + "px";
+          let fontColour = document.getElementById("select-font-colour").value;
+          if (lowerCaseRadioChecked == true) {
+            myAlphabet = [
+              "a",
+              "b",
+              "c",
+              "d",
+              "e",
+              "f",
+              "g",
+              "h",
+              "i",
+              "j",
+              "k",
+              "l",
+              "m",
+              "n",
+              "o",
+              "p",
+              "q",
+              "r",
+              "s",
+              "t",
+              "u",
+              "v",
+              "w",
+              "x",
+              "y",
+              "z",
+              "aa",
+              "bb",
+              "cc",
+              "dd",
+              "ee",
+              "ff",
+              "gg",
+              "hh",
+              "ii",
+              "jj",
+              "kk",
+              "ll",
+              "mm",
+              "nn",
+              "oo",
+              "pp",
+              "qq",
+              "rr",
+              "ss",
+              "tt",
+              "uu",
+              "vv",
+              "ww",
+              "xx",
+              "yy",
+              "zz",
+              "aaa",
+              "bbb",
+              "ccc",
+              "ddd",
+              "eee",
+              "fff",
+              "ggg",
+              "hhh",
+              "iii",
+              "jjj",
+              "kkk",
+              "lll",
+              "mmm",
+              "nnn",
+              "ooo",
+              "ppp",
+              "qqq",
+              "rrr",
+              "sss",
+              "ttt",
+              "uuu",
+              "vvv",
+              "www",
+              "xxx",
+              "yyy",
+              "zzz",
+            ];
+          } else {
+            myAlphabet = [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K",
+              "L",
+              "M",
+              "N",
+              "O",
+              "P",
+              "Q",
+              "R",
+              "S",
+              "T",
+              "U",
+              "V",
+              "W",
+              "X",
+              "Y",
+              "Z",
+              "AA",
+              "BB",
+              "CC",
+              "DD",
+              "EE",
+              "FF",
+              "GG",
+              "HH",
+              "II",
+              "JJ",
+              "KK",
+              "LL",
+              "MM",
+              "NN",
+              "OO",
+              "PP",
+              "QQ",
+              "RR",
+              "SS",
+              "TT",
+              "UU",
+              "VV",
+              "WW",
+              "XX",
+              "YY",
+              "ZZ",
+              "AAA",
+              "BBB",
+              "CCC",
+              "DDD",
+              "EEE",
+              "FFF",
+              "GGG",
+              "HHH",
+              "III",
+              "JJJ",
+              "KKK",
+              "LLL",
+              "MMM",
+              "NNN",
+              "OOO",
+              "PPP",
+              "QQQ",
+              "RRR",
+              "SSS",
+              "TTT",
+              "UUU",
+              "VVV",
+              "WWW",
+              "XXX",
+              "YYY",
+              "ZZZ",
+            ];
+          } //set to upper case as default
+          let numbers = [];
+          for (let i = 1; i < 100; i++) {
+            numbers[i - 1] = i;
+          }
+          //below, we add all the letters
+          for (
+            let j = Number(gridLineSpacingValue) / 2;
+            j < theImageWidth;
+            j += gridLineSpacingValueNumber
+          ) {
+            const letterDiv = document.createElement("div");
+
+            letterDiv.innerHTML +=
+              myAlphabet[
+                (j +
+                  (Number(gridLineSpacingValue) / 2 +
+                    Number(gridLineWidthValue))) /
+                  (Number(gridLineSpacingValue) + Number(gridLineWidthValue)) -
+                  1
+              ];
+
+            letterDiv.style.position = "absolute";
+            letterDiv.style.color = fontColour;
+            letterDiv.style.fontSize = fontSizeString;
+            letterDiv.style.top = "-3px";
+            letterDiv.style.left =
+              (j - Number(gridLineSpacingValue) / 10).toString() + "px";
+            letterDiv.style.zIndex = "160";
+            letterDiv.className = "removeable";
+            letterDiv.style.fontWeight = "600";
+
+            document.getElementById("my-grid").appendChild(letterDiv);
+          }
+
+          //add numbers
+
+          for (
+            let j = Number(gridLineSpacingValue) / 2;
+            j < theImageHeight;
+            j += gridLineSpacingValueNumber
+          ) {
+            const letterDiv = document.createElement("div");
+
+            letterDiv.innerHTML +=
+              numbers[
+                (j +
+                  (Number(gridLineSpacingValue) / 2 +
+                    Number(gridLineWidthValue))) /
+                  (Number(gridLineSpacingValue) + Number(gridLineWidthValue)) -
+                  1
+              ];
+
+            letterDiv.style.position = "absolute";
+            letterDiv.style.color = fontColour;
+            letterDiv.style.fontSize = fontSizeString;
+            letterDiv.style.left = "0px";
+            letterDiv.style.top =
+              (j - Number(gridLineSpacingValue) / 4).toString() + "px";
+            letterDiv.style.zIndex = "160";
+            letterDiv.className = "removeable";
+            letterDiv.style.fontWeight = "600";
+
+            document.getElementById("my-grid").appendChild(letterDiv);
+          }
+        }
+      }
+
+      function GenerateFinalImage() {
+        alert(
+          "Use a snipping tool to take a screenshot of the final image! On PC, use Windows Key + Shift + S. On Mac, use Shift + Command + 5."
+        );
+      }
+    </script>
+
+    <!--SCRIPT ABOVE-->
+  </body>
+</html>

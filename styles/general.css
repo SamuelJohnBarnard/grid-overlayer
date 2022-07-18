@@ -1,0 +1,14 @@
+body {
+  height: 800px;
+  background-color: #3500d3;
+  color: rgb(211, 218, 178);
+  font-family: Roboto Slab;
+}
+
+input {
+  width: 60px;
+}
+
+input:hover {
+  cursor: pointer;
+}

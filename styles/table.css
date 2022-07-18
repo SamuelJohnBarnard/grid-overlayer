@@ -1,0 +1,23 @@
+.grid {
+  background-image: repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 20px,
+      #000 20px,
+      #000 21px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 20px,
+      #000 20px,
+      #000 21px
+    );
+
+  /* height: 500px;
+  width: 833px; */
+
+  position: absolute;
+  z-index: 150;
+  visibility: hidden;
+}

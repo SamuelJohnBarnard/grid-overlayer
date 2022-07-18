@@ -1,0 +1,89 @@
+.page-content {
+  padding-top: 100px;
+}
+
+.selector-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.image-container {
+  display: flex;
+  width: 50%;
+  justify-content: center;
+  position: relative;
+  margin-left: 80px;
+  text-align: center;
+}
+
+.overlayable-image {
+  max-width: 1000px;
+  max-height: 500px;
+  position: absolute;
+  z-index: -1;
+}
+
+.selector {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  width: 100%;
+}
+
+.sub-selector {
+  margin-left: 20px;
+}
+
+.create-grid-button {
+  margin-left: 30px;
+  margin-top: 30px;
+}
+
+.component-grid {
+  display: flex;
+  margin-bottom: 200px;
+}
+
+@media (max-width: 1200px) {
+  .component-grid {
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .component-grid {
+    flex-direction: row;
+    justify-content: center;
+    align-items: top;
+  }
+}
+
+.create-grid-button {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.generation-button {
+  background-color: #424242;
+  border-style: solid;
+  padding: 30px 50px;
+  font-size: 25px;
+  border-color: rgb(211, 218, 178);
+  color: rgb(211, 218, 178);
+  border-radius: 10px;
+  border-width: 5px;
+}
+
+.generation-button:hover {
+  cursor: pointer;
+  background-color: #8d8d8d;
+}
+
+.hideable {
+  visibility: hidden;
+}
